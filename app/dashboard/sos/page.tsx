@@ -28,7 +28,7 @@ export default function SOSPage() {
       id: generateId(),
       callerName: name || 'Anonymous',
       phoneNumber: phone || 'Not provided',
-      location: userLocation || { lat: 22.7196, lng: 75.8577 },
+      location: userLocation || { lat: 21.2514, lng: 81.6296 },
       message: message || 'Emergency! Need immediate assistance.',
       medicalInfo: medicalInfo || undefined,
       timestamp: new Date().toISOString(),

@@ -42,6 +42,7 @@ interface AppState {
   rescueTeams: RescueTeam[]
   citizenReports: CitizenReport[]
   selectedIncident: Incident | null
+  selectedRoute: RouteOption | null
   isLoading: boolean
   showReportForm: boolean
   sidebarView: 'list' | 'details' | 'navigation' | 'resources' | 'sos' | 'complaints'
@@ -62,6 +63,7 @@ interface AppState {
   setRescueTeams: (teams: RescueTeam[]) => void
   addCitizenReport: (report: CitizenReport) => void
   setSelectedIncident: (incident: Incident | null) => void
+  setSelectedRoute: (route: RouteOption | null) => void
   setLoading: (loading: boolean) => void
   setShowReportForm: (show: boolean) => void
   setSidebarView: (view: AppState['sidebarView']) => void
@@ -80,7 +82,7 @@ export const useAppStore = create<AppState>()(
   persist(
     (set, get) => ({
       mode: 'normal',
-      userLocation: { lat: 22.7196, lng: 75.8577 },
+      userLocation: { lat: 21.2514, lng: 81.6296 },
       incidents: [],
       reports: [],
       complaints: [],
@@ -91,6 +93,7 @@ export const useAppStore = create<AppState>()(
       rescueTeams: [],
       citizenReports: [],
       selectedIncident: null,
+      selectedRoute: null,
       isLoading: true,
       showReportForm: false,
       sidebarView: 'list',
@@ -117,6 +120,7 @@ export const useAppStore = create<AppState>()(
       setRescueTeams: (teams) => set({ rescueTeams: teams }),
       addCitizenReport: (report) => set((s) => ({ citizenReports: [...s.citizenReports, report] })),
       setSelectedIncident: (incident) => set({ selectedIncident: incident }),
+      setSelectedRoute: (route) => set({ selectedRoute: route }),
       setLoading: (loading) => set({ isLoading: loading }),
       setShowReportForm: (show) => set({ showReportForm: show }),
       setSidebarView: (view) => set({ sidebarView: view }),

@@ -84,7 +84,7 @@ export default function MapView() {
   return (
     <div className="h-full w-full rounded-xl overflow-hidden">
       <MapContainer
-        center={[userLocation?.lat || 22.7196, userLocation?.lng || 75.8577]}
+        center={[userLocation?.lat || 21.2514, userLocation?.lng || 81.6296]}
         zoom={13}
         className="h-full w-full"
         zoomControl={false}

@@ -49,7 +49,7 @@ export default function ReportPage() {
     createReport({
       type: selectedType,
       description,
-      location: userLocation || { lat: 22.7196, lng: 75.8577 },
+      location: userLocation || { lat: 21.2514, lng: 81.6296 },
       photoUrl: photoPreview || undefined,
       reportedBy: name || 'Anonymous',
     })

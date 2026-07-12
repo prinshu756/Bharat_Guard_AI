@@ -2,6 +2,7 @@
 
 import { Shield, Clock, MapPin, AlertTriangle, CheckCircle2 } from 'lucide-react'
 import { motion } from 'framer-motion'
+import { useRouter } from 'next/navigation'
 import DashboardLayout from '@/components/layout/DashboardLayout'
 import Card from '@/components/ui/Card'
 import Button from '@/components/ui/Button'
@@ -16,7 +17,9 @@ const safetyTips = [
 ]
 
 export default function NavigatePage() {
+  const router = useRouter()
   const routes = useAppStore((s) => s.routes)
+  const setSelectedRoute = useAppStore((s) => s.setSelectedRoute)
 
   return (
     <DashboardLayout userRole="user">
@@ -32,14 +35,14 @@ export default function NavigatePage() {
               <p className="text-xs text-text-muted mb-1">From</p>
               <div className="flex items-center gap-2 text-sm">
                 <MapPin size={14} className="text-text-muted" />
-                Rajwada, Indore
+                GE Road, Raipur
               </div>
             </div>
             <div className="bg-surface-overlay rounded-lg p-3">
               <p className="text-xs text-text-muted mb-1">To</p>
               <div className="flex items-center gap-2 text-sm">
                 <MapPin size={14} className="text-text-muted" />
-                Vijay Nagar, Indore
+                Telibandha, Raipur
               </div>
             </div>
           </div>
@@ -117,6 +120,7 @@ export default function NavigatePage() {
               <Button
                 variant={route.isRecommended ? 'primary' : 'secondary'}
                 className={cn('w-full', route.isRecommended && 'bg-green-700 hover:bg-green-600')}
+                onClick={() => { setSelectedRoute(route); router.push('/dashboard') }}
               >
                 {route.isRecommended ? 'Take this route' : 'Select route'}
               </Button>
