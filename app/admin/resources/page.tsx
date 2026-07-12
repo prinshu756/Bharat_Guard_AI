@@ -114,8 +114,8 @@ export default function AdminResourcesPage() {
                 </div>
 
                 <div className="flex gap-2 pt-3 border-t border-surface-border">
-                  <Button variant="secondary" size="sm" className="flex-1">Call</Button>
-                  <Button variant="secondary" size="sm" className="flex-1"><Truck size={12} /> Dispatch</Button>
+                  <Button variant="secondary" size="sm" className="flex-1" onClick={() => { if (res.phone) window.open(`tel:${res.phone}`) }}>Call</Button>
+                  <Button variant="secondary" size="sm" className="flex-1" onClick={() => { /* dispatch logic */ }}><Truck size={12} /> Dispatch</Button>
                 </div>
               </Card>
               </motion.div>
@@ -124,7 +124,7 @@ export default function AdminResourcesPage() {
         </div>
 
         <div className="text-center">
-          <Button variant="secondary">Add resource</Button>
+          <Button variant="secondary" onClick={() => { /* open add resource modal */ }}>Add resource</Button>
         </div>
       </div>
     </DashboardLayout>

@@ -140,10 +140,28 @@ textarea:focus-visible {
   }
 }
 
-/* Leaflet overrides */
+/* Leaflet overrides — keep z-index low so app UI sits above map */
 .leaflet-container {
   background: #121c2b !important;
   font-family: inherit;
+  z-index: 0 !important;
+}
+
+.leaflet-pane {
+  z-index: 1 !important;
+}
+
+.leaflet-top,
+.leaflet-bottom {
+  z-index: 2 !important;
+}
+
+.leaflet-control-zoom {
+  z-index: 2 !important;
+}
+
+.leaflet-popup {
+  z-index: 3 !important;
 }
 
 .leaflet-popup-content-wrapper {

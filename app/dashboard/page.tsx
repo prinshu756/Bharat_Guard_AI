@@ -4,6 +4,7 @@ import dynamic from 'next/dynamic'
 import { Navigation, RefreshCw, Filter, RadioTower, List, X } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
+import { useRouter } from 'next/navigation'
 import { useAppStore } from '@/lib/store'
 import {
   getIncidentLabel,
@@ -127,6 +128,7 @@ export default function UserMapPage() {
   const mode = useAppStore((s) => s.mode)
   const setMode = useAppStore((s) => s.setMode)
   const loadMockData = useAppStore((s) => s.loadMockData)
+  const router = useRouter()
   const [listOpen, setListOpen] = useState(false)
   const [filterSeverity, setFilterSeverity] = useState<SeverityFilter>('all')
 
@@ -193,7 +195,7 @@ export default function UserMapPage() {
             </div>
           </div>
 
-          <div className="flex-1 card overflow-hidden min-h-0">
+          <div className="flex-1 card overflow-hidden min-h-0 relative z-0">
             <MapView />
           </div>
         </div>
@@ -279,7 +281,7 @@ export default function UserMapPage() {
                 >
                   Confirm ({selectedIncident.citizenConfirmations})
                 </Button>
-                <Button className="flex-1">
+                <Button className="flex-1" onClick={() => { setSelectedIncident(null); router.push('/dashboard/navigate') }}>
                   <Navigation size={14} />
                   Navigate
                 </Button>

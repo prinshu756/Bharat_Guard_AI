@@ -91,11 +91,10 @@ export default function DashboardLayout({ children, userRole }: DashboardLayoutP
 
       <motion.aside
         id="dashboard-navigation"
-        animate={{ x: 0 }}
         initial={false}
+        animate={{ x: sidebarOpen ? 0 : '-100%' }}
         className={cn(
-          'fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-surface-border bg-surface-raised shadow-elevated lg:static lg:shadow-none',
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+          'fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-surface-border bg-surface-raised shadow-elevated lg:!translate-x-0 lg:static lg:shadow-none'
         )}
         transition={{ type: 'spring', stiffness: 300, damping: 30 }}
       >
