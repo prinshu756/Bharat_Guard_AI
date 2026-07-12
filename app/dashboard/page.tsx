@@ -1,8 +1,9 @@
 'use client'
 
 import dynamic from 'next/dynamic'
-import { MapPin, Navigation, Shield, RefreshCw, Filter, RadioTower, List, X } from 'lucide-react'
+import { Navigation, RefreshCw, Filter, RadioTower, List, X } from 'lucide-react'
 import { useState, useEffect } from 'react'
+import { motion } from 'framer-motion'
 import { useAppStore } from '@/lib/store'
 import {
   getIncidentLabel,
@@ -74,9 +75,12 @@ function IncidentList({
       </div>
 
       <div className="flex-1 overflow-y-auto p-3 space-y-2">
-        {filteredIncidents.map((incident, idx) => (
-          <button
+          {filteredIncidents.map((incident, idx) => (
+          <motion.button
             key={incident.id}
+            initial={{ opacity: 0, x: -12 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.25, delay: idx * 0.035 }}
             type="button"
             onClick={() => setSelectedIncident(incident)}
             className={cn(
@@ -102,7 +106,7 @@ function IncidentList({
                 </div>
               </div>
             </div>
-          </button>
+          </motion.button>
         ))}
         {filteredIncidents.length === 0 && (
           <div className="text-center py-10 text-text-muted text-sm">

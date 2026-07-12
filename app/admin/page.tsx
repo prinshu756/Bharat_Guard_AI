@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Shield, AlertTriangle, Clock, MapPin, CheckCircle2, Filter, MoreVertical, Truck } from 'lucide-react'
+import { motion } from 'framer-motion'
 import DashboardLayout from '@/components/layout/DashboardLayout'
 import Card from '@/components/ui/Card'
 import { useAppStore } from '@/lib/store'
@@ -81,18 +82,25 @@ export default function AdminDashboardPage() {
         </div>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-          {statCards.map(({ label, value, icon: Icon, highlight }) => (
-            <Card key={label}>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-surface-overlay rounded-lg flex items-center justify-center">
-                  <Icon size={18} className="text-text-secondary" />
+          {statCards.map(({ label, value, icon: Icon, highlight }, idx) => (
+            <motion.div
+              key={label}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.25, delay: idx * 0.06 }}
+            >
+              <Card>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-surface-overlay rounded-lg flex items-center justify-center">
+                    <Icon size={18} className="text-text-secondary" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-text-muted">{label}</p>
+                    <p className={cn('text-xl font-semibold', highlight)}>{value}</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-xs text-text-muted">{label}</p>
-                  <p className={cn('text-xl font-semibold', highlight)}>{value}</p>
-                </div>
-              </div>
-            </Card>
+              </Card>
+            </motion.div>
           ))}
         </div>
 
@@ -109,10 +117,16 @@ export default function AdminDashboardPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-surface-border">
-                {filteredComplaints.map((complaint) => {
+                {filteredComplaints.map((complaint, idx) => {
                   const currentIdx = statusIndex[complaint.status]
                   return (
-                    <tr key={complaint.id} className="hover:bg-surface-overlay/30 transition-colors">
+                    <motion.tr
+                      key={complaint.id}
+                      initial={{ opacity: 0, x: -8 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.2, delay: idx * 0.03 }}
+                      className="hover:bg-surface-overlay/30 transition-colors"
+                    >
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-2">
                           <span>{getIncidentIcon(complaint.type)}</span>
@@ -163,7 +177,7 @@ export default function AdminDashboardPage() {
                           </button>
                         </div>
                       </td>
-                    </tr>
+                    </motion.tr>
                   )
                 })}
               </tbody>

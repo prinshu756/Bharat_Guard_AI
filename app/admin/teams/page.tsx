@@ -1,6 +1,7 @@
 'use client'
 
-import { Users, Shield, AlertTriangle, Truck, Clock, CheckCircle2, Building2, Stethoscope, MapPin, Phone, MoreVertical } from 'lucide-react'
+import { Users, Shield, AlertTriangle, Truck, Clock, CheckCircle2, Building2, MapPin, Phone, MoreVertical } from 'lucide-react'
+import { motion } from 'framer-motion'
 import DashboardLayout from '@/components/layout/DashboardLayout'
 import Card from '@/components/ui/Card'
 import Button from '@/components/ui/Button'
@@ -31,11 +32,18 @@ export default function AdminTeamsPage() {
         </div>
 
         <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
-          {stats.map(({ label, value, highlight }) => (
-            <Card key={label}>
-              <p className="text-xs text-text-muted mb-0.5">{label}</p>
-              <p className={cn('text-xl font-semibold', highlight)}>{value}</p>
-            </Card>
+          {stats.map(({ label, value, highlight }, idx) => (
+            <motion.div
+              key={label}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2, delay: idx * 0.05 }}
+            >
+              <Card>
+                <p className="text-xs text-text-muted mb-0.5">{label}</p>
+                <p className={cn('text-xl font-semibold', highlight)}>{value}</p>
+              </Card>
+            </motion.div>
           ))}
         </div>
 
@@ -45,8 +53,14 @@ export default function AdminTeamsPage() {
             <span className="text-xs text-text-muted">{rescueTeams.length}</span>
           </div>
           <div className="divide-y divide-surface-border">
-            {rescueTeams.map((team) => (
-              <div key={team.id} className="p-4 hover:bg-surface-overlay/30 transition-colors">
+            {rescueTeams.map((team, idx) => (
+              <motion.div
+                key={team.id}
+                initial={{ opacity: 0, x: -8 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.2, delay: idx * 0.04 }}
+                className="p-4 hover:bg-surface-overlay/30 transition-colors"
+              >
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                   <div className="flex items-center gap-3 min-w-0">
                     <div className="w-10 h-10 bg-surface-overlay rounded-lg flex items-center justify-center flex-shrink-0">
@@ -64,7 +78,7 @@ export default function AdminTeamsPage() {
                   </div>
                 </div>
                 <p className="mt-2 text-xs text-text-muted flex items-center gap-1"><MapPin size={11} /> {team.location.address}</p>
-              </div>
+              </motion.div>
             ))}
           </div>
         </Card>
@@ -75,8 +89,14 @@ export default function AdminTeamsPage() {
             <span className="text-xs text-text-muted">{citizenReports.length}</span>
           </div>
           <div className="divide-y divide-surface-border">
-            {citizenReports.map((report) => (
-              <div key={report.id} className="p-4 hover:bg-surface-overlay/30 transition-colors">
+            {citizenReports.map((report, idx) => (
+              <motion.div
+                key={report.id}
+                initial={{ opacity: 0, x: -8 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.2, delay: idx * 0.03 }}
+                className="p-4 hover:bg-surface-overlay/30 transition-colors"
+              >
                 <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
                   <div className="min-w-0">
                     <p className="font-medium capitalize text-sm">{report.type.replace('_', ' ')}</p>
@@ -88,7 +108,7 @@ export default function AdminTeamsPage() {
                   </div>
                   <span className="text-xs px-2 py-0.5 rounded border border-surface-border capitalize flex-shrink-0">{report.status}</span>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </Card>

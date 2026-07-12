@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Camera, Mic, MapPin, Send, CheckCircle2 } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
 import DashboardLayout from '@/components/layout/DashboardLayout'
 import Card from '@/components/ui/Card'
 import Button from '@/components/ui/Button'
@@ -103,7 +104,15 @@ export default function ReportPage() {
               </div>
             </div>
 
-            <div className="p-4 sm:p-5 space-y-5">
+            <AnimatePresence mode="wait">
+            <motion.div
+              key={step}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.2 }}
+              className="p-4 sm:p-5 space-y-5"
+            >
               {step === 'type' && (
                 <div>
                   <p className="text-sm text-text-secondary mb-4">Select the type of issue</p>
@@ -208,7 +217,8 @@ export default function ReportPage() {
                   </div>
                 </div>
               )}
-            </div>
+            </motion.div>
+            </AnimatePresence>
           </Card>
         )}
       </div>

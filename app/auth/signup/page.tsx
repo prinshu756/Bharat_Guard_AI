@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Building2, Users, CheckCircle2 } from 'lucide-react'
 import Link from 'next/link'
+import { motion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
 import { useAuthStore } from '@/lib/auth-store'
 import Button from '@/components/ui/Button'
@@ -55,18 +56,34 @@ export default function SignupPage() {
 
   if (success) {
     return (
-      <Card padding="lg" className="text-center animate-fade-in">
-        <div className="w-14 h-14 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
-          <CheckCircle2 size={32} className="text-green-400" />
-        </div>
-        <h1 className="text-xl font-semibold mb-1">Account created</h1>
-        <p className="text-sm text-text-secondary">Redirecting to your dashboard…</p>
-      </Card>
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.3 }}
+      >
+        <Card padding="lg" className="text-center">
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: 'spring', stiffness: 200, delay: 0.1 }}
+            className="w-14 h-14 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-4"
+          >
+            <CheckCircle2 size={32} className="text-green-400" />
+          </motion.div>
+          <h1 className="text-xl font-semibold mb-1">Account created</h1>
+          <p className="text-sm text-text-secondary">Redirecting to your dashboard…</p>
+        </Card>
+      </motion.div>
     )
   }
 
   return (
-    <Card padding="lg" className="animate-fade-in">
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+    >
+    <Card padding="lg">
       <div className="mb-6">
         <h1 className="text-xl font-semibold mb-1">Create account</h1>
         <p className="text-sm text-text-secondary">Join the citizen safety network</p>
@@ -181,5 +198,6 @@ export default function SignupPage() {
         <Link href="/auth/login" className="text-accent hover:text-accent-hover font-medium">Sign in</Link>
       </p>
     </Card>
+    </motion.div>
   )
 }

@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Building2, Users } from 'lucide-react'
 import Link from 'next/link'
+import { motion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
 import { useAuthStore } from '@/lib/auth-store'
 import Button from '@/components/ui/Button'
@@ -31,7 +32,12 @@ export default function LoginPage() {
   }
 
   return (
-    <Card padding="lg" className="animate-fade-in">
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+    >
+    <Card padding="lg">
       <div className="mb-6">
         <h1 className="text-xl font-semibold mb-1">Welcome back</h1>
         <p className="text-sm text-text-secondary">Sign in to your dashboard</p>
@@ -122,5 +128,6 @@ export default function LoginPage() {
         </div>
       </details>
     </Card>
+    </motion.div>
   )
 }

@@ -1,6 +1,7 @@
 'use client'
 
 import { Shield, Clock, MapPin, AlertTriangle, CheckCircle2 } from 'lucide-react'
+import { motion } from 'framer-motion'
 import DashboardLayout from '@/components/layout/DashboardLayout'
 import Card from '@/components/ui/Card'
 import Button from '@/components/ui/Button'
@@ -50,11 +51,16 @@ export default function NavigatePage() {
             Available routes
           </h2>
 
-          {routes.map((route) => (
-            <Card
+          {routes.map((route, idx) => (
+            <motion.div
               key={route.id}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: idx * 0.08 }}
+            >
+            <Card
               className={cn(
-                'cursor-pointer transition-colors hover:border-slate-600',
+                'cursor-pointer transition-transform duration-200 hover:scale-[1.01] hover:border-slate-600',
                 route.isRecommended && 'ring-1 ring-green-500/30',
                 getSafetyScoreBg(route.safetyScore)
               )}
@@ -115,6 +121,7 @@ export default function NavigatePage() {
                 {route.isRecommended ? 'Take this route' : 'Select route'}
               </Button>
             </Card>
+            </motion.div>
           ))}
 
           <Card>

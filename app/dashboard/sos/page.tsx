@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Phone, MapPin, MessageSquare, Heart, Send, AlertTriangle, Shield, CheckCircle2, User } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
 import DashboardLayout from '@/components/layout/DashboardLayout'
 import Card from '@/components/ui/Card'
 import Button from '@/components/ui/Button'
@@ -53,8 +54,16 @@ export default function SOSPage() {
           <p className="text-sm text-text-secondary mt-1">Send your location to rescue authorities instantly</p>
         </div>
 
+        <AnimatePresence mode="wait">
         {!showForm && !sent && (
-          <div className="space-y-4">
+          <motion.div
+            key="init"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -16 }}
+            transition={{ duration: 0.2 }}
+            className="space-y-4"
+          >
             <Card padding="lg" className="text-center">
               <h2 className="text-lg font-semibold mb-2">Need immediate help?</h2>
               <p className="text-sm text-text-secondary mb-6 max-w-sm mx-auto">
@@ -98,10 +107,17 @@ export default function SOSPage() {
                 ))}
               </div>
             </Card>
-          </div>
+          </motion.div>
         )}
 
         {showForm && !sent && (
+          <motion.div
+            key="form"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -16 }}
+            transition={{ duration: 0.2 }}
+          >
           <Card padding="lg" className="space-y-4">
             <div className="bg-accent-subtle border border-red-500/25 rounded-lg p-3 flex items-center gap-3 text-sm">
               <AlertTriangle size={18} className="text-accent flex-shrink-0" />
@@ -132,13 +148,25 @@ export default function SOSPage() {
               <Send size={18} /> Send emergency alert
             </Button>
           </Card>
+          </motion.div>
         )}
 
         {sent && (
+          <motion.div
+            key="sent"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.25 }}
+          >
           <Card padding="lg" className="text-center">
-            <div className="w-14 h-14 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ type: 'spring', stiffness: 200, delay: 0.1 }}
+              className="w-14 h-14 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-4"
+            >
               <CheckCircle2 size={28} className="text-green-400" />
-            </div>
+            </motion.div>
             <h2 className="text-lg font-semibold text-green-400 mb-1">SOS sent</h2>
             <p className="text-sm text-text-secondary mb-4">Rescue authorities have been notified.</p>
             <div className="bg-surface-overlay rounded-lg p-3 text-left text-sm space-y-1">
@@ -147,7 +175,9 @@ export default function SOSPage() {
               <p><span className="text-text-muted">Location:</span> {userLocation?.lat.toFixed(4)}, {userLocation?.lng.toFixed(4)}</p>
             </div>
           </Card>
+          </motion.div>
         )}
+        </AnimatePresence>
       </div>
     </DashboardLayout>
   )

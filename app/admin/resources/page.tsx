@@ -1,6 +1,7 @@
 'use client'
 
-import { Building2, UtensilsCrossed, Droplets, Battery, Stethoscope, Shield, MapPin, Phone, Truck } from 'lucide-react'
+import { Building2, UtensilsCrossed, Droplets, Battery, Stethoscope, Shield as ShieldIcon, MapPin, Phone, Truck } from 'lucide-react'
+import { motion } from 'framer-motion'
 import DashboardLayout from '@/components/layout/DashboardLayout'
 import Card from '@/components/ui/Card'
 import Button from '@/components/ui/Button'
@@ -14,7 +15,7 @@ const resourceConfig: Record<EmergencyResource['type'], { icon: typeof Building2
   food_distribution: { icon: UtensilsCrossed, label: 'Food' },
   water_point: { icon: Droplets, label: 'Water' },
   charging_station: { icon: Battery, label: 'Charging' },
-  medical_camp: { icon: Shield, label: 'Medical camp' },
+  medical_camp: { icon: ShieldIcon, label: 'Medical camp' },
 }
 
 export default function AdminResourcesPage() {
@@ -46,22 +47,35 @@ export default function AdminResourcesPage() {
         </div>
 
         <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
-          {statCards.map(({ label, value, highlight }) => (
-            <Card key={label}>
-              <p className="text-xs text-text-muted mb-0.5">{label}</p>
-              <p className={cn('text-xl font-semibold', highlight)}>{value}</p>
-            </Card>
+          {statCards.map(({ label, value, highlight }, idx) => (
+            <motion.div
+              key={label}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2, delay: idx * 0.05 }}
+            >
+              <Card>
+                <p className="text-xs text-text-muted mb-0.5">{label}</p>
+                <p className={cn('text-xl font-semibold', highlight)}>{value}</p>
+              </Card>
+            </motion.div>
           ))}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
-          {emergencyResources.map((res) => {
+          {emergencyResources.map((res, idx) => {
             const config = resourceConfig[res.type]
             const Icon = config.icon
             const occupancyPercent = Math.round((res.currentOccupancy / res.capacity) * 100)
 
             return (
-              <Card key={res.id} className="hover:border-slate-600 transition-colors">
+              <motion.div
+                key={res.id}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.25, delay: idx * 0.04 }}
+              >
+              <Card className="hover:border-slate-600 transition-colors">
                 <div className="flex items-start gap-3 mb-3">
                   <div className="w-10 h-10 bg-surface-overlay rounded-lg flex items-center justify-center flex-shrink-0">
                     <Icon size={18} className="text-text-secondary" />
@@ -104,6 +118,7 @@ export default function AdminResourcesPage() {
                   <Button variant="secondary" size="sm" className="flex-1"><Truck size={12} /> Dispatch</Button>
                 </div>
               </Card>
+              </motion.div>
             )
           })}
         </div>

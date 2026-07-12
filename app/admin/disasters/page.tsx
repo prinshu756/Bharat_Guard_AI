@@ -1,7 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { AlertTriangle, Radio, MapPin, Users, Shield, Clock, CheckCircle2 } from 'lucide-react'
+import { AlertTriangle, RadioTower, MapPin, Users, Shield, Clock, CheckCircle2 } from 'lucide-react'
+import { motion } from 'framer-motion'
 import DashboardLayout from '@/components/layout/DashboardLayout'
 import Card from '@/components/ui/Card'
 import Button from '@/components/ui/Button'
@@ -39,9 +40,14 @@ export default function AdminDisastersPage() {
 
         {activeTab === 'alerts' && (
           <div className="space-y-3">
-            {disasterAlerts.map((alert) => (
-              <Card
+            {disasterAlerts.map((alert, idx) => (
+              <motion.div
                 key={alert.id}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.25, delay: idx * 0.05 }}
+              >
+              <Card
                 className={cn(
                   alert.severity === 'critical' && 'border-red-500/30',
                   alert.severity === 'high' && 'border-orange-500/25'
@@ -79,18 +85,25 @@ export default function AdminDisastersPage() {
                 </div>
 
                 <div className="flex flex-wrap gap-2 pt-3 border-t border-surface-border">
-                  <Button size="sm"><Radio size={14} /> Dispatch teams</Button>
+                  <Button size="sm"><RadioTower size={14} /> Dispatch teams</Button>
                   <Button variant="secondary" size="sm">View details</Button>
                 </div>
               </Card>
+              </motion.div>
             ))}
           </div>
         )}
 
         {activeTab === 'reports' && (
           <div className="space-y-3">
-            {citizenReports.map((report) => (
-              <Card key={report.id}>
+            {citizenReports.map((report, idx) => (
+              <motion.div
+                key={report.id}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.25, delay: idx * 0.04 }}
+              >
+              <Card>
                 <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-3">
                   <div>
                     <h3 className="font-medium capitalize text-sm">{report.type.replace('_', ' ')}</h3>
@@ -127,6 +140,7 @@ export default function AdminDisastersPage() {
                   </div>
                 </div>
               </Card>
+              </motion.div>
             ))}
           </div>
         )}

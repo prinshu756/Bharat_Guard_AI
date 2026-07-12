@@ -1,11 +1,14 @@
 'use client'
 
-import { ReactNode, useState } from 'react'
-import { MapPin, AlertTriangle, Navigation, Shield, Building2, Users, LogOut, Bell, Menu, X } from 'lucide-react'
+import { type ReactNode, useEffect, useState } from 'react'
+import { AlertTriangle, Bell, Building2, LogOut, MapPin, Menu, Navigation, Shield, Users, X } from 'lucide-react'
 import Link from 'next/link'
+import { motion, AnimatePresence } from 'framer-motion'
 import { usePathname, useRouter } from 'next/navigation'
 import { useAuthStore } from '@/lib/auth-store'
+import { useAppStore } from '@/lib/store'
 import Logo from '@/components/ui/Logo'
+import { AdminPageSkeleton, ContentPageSkeleton, DashboardMapSkeleton } from '@/components/ui/Skeleton'
 import { cn } from '@/lib/utils'
 
 interface DashboardLayoutProps {
@@ -13,28 +16,48 @@ interface DashboardLayoutProps {
   userRole: 'user' | 'admin'
 }
 
-const userNavItems = [
-  { href: '/dashboard', label: 'Map', icon: MapPin },
-  { href: '/dashboard/report', label: 'Report', icon: AlertTriangle },
+type NavItem = {
+  href: string
+  label: string
+  icon: typeof MapPin
+  critical?: boolean
+}
+
+const userNavItems: NavItem[] = [
+  { href: '/dashboard', label: 'Live map', icon: MapPin },
+  { href: '/dashboard/report', label: 'Report issue', icon: AlertTriangle },
   { href: '/dashboard/navigate', label: 'Navigate', icon: Navigation },
-  { href: '/dashboard/sos', label: 'SOS', icon: Shield, critical: true },
+  { href: '/dashboard/sos', label: 'Emergency SOS', icon: Shield, critical: true },
 ]
 
-const adminNavItems = [
+const adminNavItems: NavItem[] = [
   { href: '/admin', label: 'Complaints', icon: Shield },
   { href: '/admin/resources', label: 'Resources', icon: Building2 },
-  { href: '/admin/teams', label: 'Rescue Teams', icon: Users },
+  { href: '/admin/teams', label: 'Rescue teams', icon: Users },
   { href: '/admin/disasters', label: 'Disasters', icon: AlertTriangle },
+]
+
+const notifications = [
+  { title: 'Flood alert - Rajwada', desc: 'Critical flooding reported', time: '2m ago', tone: 'bg-red-400' },
+  { title: 'Report verified', desc: 'A pothole report was confirmed', time: '15m ago', tone: 'bg-green-400' },
+  { title: 'Route updated', desc: 'A safer route is available', time: '1h ago', tone: 'bg-blue-400' },
 ]
 
 export default function DashboardLayout({ children, userRole }: DashboardLayoutProps) {
   const router = useRouter()
   const pathname = usePathname()
   const { user, logout } = useAuthStore()
+  const isLoading = useAppStore((state) => state.isLoading)
+  const loadMockData = useAppStore((state) => state.loadMockData)
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [notificationsOpen, setNotificationsOpen] = useState(false)
 
+  useEffect(() => {
+    if (isLoading) void loadMockData()
+  }, [isLoading, loadMockData])
+
   const navItems = userRole === 'admin' ? adminNavItems : userNavItems
+  const activeItem = navItems.find((item) => pathname === item.href)
 
   const handleLogout = () => {
     logout()
@@ -42,37 +65,60 @@ export default function DashboardLayout({ children, userRole }: DashboardLayoutP
     router.refresh()
   }
 
-  return (
-    <div className="min-h-screen bg-surface flex">
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
-          onClick={() => setSidebarOpen(false)}
-          aria-hidden
-        />
-      )}
+  const loadingContent = pathname === '/dashboard'
+    ? <DashboardMapSkeleton />
+    : userRole === 'admin'
+      ? <AdminPageSkeleton />
+      : <ContentPageSkeleton />
 
-      <aside
-        className={cn(
-          'fixed lg:static inset-y-0 left-0 z-50 w-64 bg-surface-raised border-r border-surface-border flex flex-col transition-transform duration-200 lg:translate-x-0',
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+  return (
+    <div className="flex min-h-screen bg-surface">
+      <AnimatePresence>
+        {sidebarOpen && (
+          <motion.button
+            key="sidebar-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.15 }}
+            type="button"
+            className="fixed inset-0 z-40 cursor-default bg-slate-950/70 backdrop-blur-[2px] lg:hidden"
+            onClick={() => setSidebarOpen(false)}
+            aria-label="Close navigation menu"
+          />
         )}
+      </AnimatePresence>
+
+      <motion.aside
+        id="dashboard-navigation"
+        animate={{ x: 0 }}
+        initial={false}
+        className={cn(
+          'fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-surface-border bg-surface-raised shadow-elevated lg:static lg:shadow-none',
+          sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+        )}
+        transition={{ type: 'spring', stiffness: 300, damping: 30 }}
       >
-        <div className="p-4 border-b border-surface-border flex items-center justify-between">
-          <Link href={userRole === 'admin' ? '/admin' : '/dashboard'} onClick={() => setSidebarOpen(false)}>
+        <div className="flex h-16 items-center justify-between border-b border-surface-border px-4 safe-top">
+          <Link href={userRole === 'admin' ? '/admin' : '/dashboard'} onClick={() => setSidebarOpen(false)} aria-label="Dashboard home">
             <Logo size="sm" />
           </Link>
           <button
             type="button"
-            className="lg:hidden btn-ghost p-1.5"
+            className="btn-ghost min-h-11 min-w-11 p-2 lg:hidden"
             onClick={() => setSidebarOpen(false)}
-            aria-label="Close menu"
+            aria-label="Close navigation menu"
           >
-            <X size={18} />
+            <X size={19} />
           </button>
         </div>
 
-        <nav className="flex-1 p-3 space-y-0.5 overflow-y-auto">
+        <div className="px-3 pt-5">
+          <p className="px-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-text-muted">
+            {userRole === 'admin' ? 'Response workspace' : 'Citizen workspace'}
+          </p>
+        </div>
+        <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-3" aria-label="Dashboard navigation">
           {navItems.map((item) => {
             const isActive = pathname === item.href
             return (
@@ -81,104 +127,124 @@ export default function DashboardLayout({ children, userRole }: DashboardLayoutP
                 href={item.href}
                 onClick={() => setSidebarOpen(false)}
                 className={cn(
-                  'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
+                  'relative flex min-h-11 items-center gap-3 overflow-hidden rounded-lg px-3 py-2.5 text-sm font-medium transition-[background-color,color] duration-150',
                   isActive
-                    ? 'bg-accent-subtle text-red-200'
+                    ? 'bg-accent-subtle text-red-100'
                     : 'text-text-secondary hover:bg-surface-overlay hover:text-text-primary',
-                  item.critical && !isActive && 'text-red-300/80'
+                  item.critical && !isActive && 'text-red-200/85'
                 )}
               >
-                <item.icon size={18} className={cn(item.critical && 'text-accent')} />
-                <span className="flex-1 truncate">{item.label}</span>
+                {isActive && <span className="absolute inset-y-2 left-0 w-0.5 rounded-r-full bg-accent" />}
+                <item.icon size={18} className={cn('shrink-0', item.critical ? 'text-accent' : isActive && 'text-red-300')} />
+                <span className="truncate">{item.label}</span>
               </Link>
             )
           })}
         </nav>
 
-        <div className="p-3 border-t border-surface-border">
-          <div className="flex items-center gap-3 px-2 py-2 mb-1">
-            <div className="w-9 h-9 bg-surface-overlay rounded-lg flex items-center justify-center text-sm font-semibold text-accent">
+        <div className="border-t border-surface-border p-3 safe-bottom">
+          <div className="mb-2 flex items-center gap-3 rounded-lg px-2 py-2">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent-subtle text-sm font-semibold text-red-200">
               {user?.name?.charAt(0) || 'U'}
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="font-medium text-sm truncate">{user?.name}</p>
-              <p className="text-xs text-text-muted capitalize">{user?.role}</p>
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-sm font-medium">{user?.name || 'Your account'}</p>
+              <p className="truncate text-xs capitalize text-text-muted">{user?.role || userRole}</p>
             </div>
           </div>
-          <button
-            type="button"
-            onClick={handleLogout}
-            className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-text-secondary hover:bg-surface-overlay hover:text-accent transition-colors"
-          >
-            <LogOut size={16} />
-            Sign out
+          <button type="button" onClick={handleLogout} className="btn-ghost w-full justify-start px-3 text-text-secondary hover:text-red-200">
+            <LogOut size={16} />Sign out
           </button>
         </div>
-      </aside>
+      </motion.aside>
 
-      <main className="flex-1 flex flex-col min-w-0">
-        <header className="sticky top-0 z-30 bg-surface/90 backdrop-blur border-b border-surface-border safe-top">
-          <div className="flex items-center justify-between h-14 px-4 lg:px-6">
-            <button
-              type="button"
-              className="lg:hidden btn-ghost p-2"
-              onClick={() => setSidebarOpen(true)}
-              aria-label="Open menu"
-            >
-              <Menu size={22} />
-            </button>
-
-            <div className="flex-1" />
-
-            <div className="flex items-center gap-1">
+      <main className="flex min-w-0 flex-1 flex-col">
+        <header className="sticky top-0 z-30 border-b border-surface-border bg-surface/85 backdrop-blur-xl safe-top">
+          <div className="flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
+            <div className="flex min-w-0 items-center gap-3">
               <button
                 type="button"
-                className="relative btn-ghost p-2"
-                onClick={() => setNotificationsOpen(!notificationsOpen)}
+                className="btn-ghost min-h-11 min-w-11 p-2 lg:hidden"
+                onClick={() => setSidebarOpen(true)}
+                aria-label="Open navigation menu"
+                aria-expanded={sidebarOpen}
+                aria-controls="dashboard-navigation"
+              >
+                <Menu size={20} />
+              </button>
+              <div className="hidden min-w-0 sm:block">
+                <p className="truncate text-sm font-semibold">{activeItem?.label || (userRole === 'admin' ? 'Response workspace' : 'Citizen workspace')}</p>
+                <p className="text-xs text-text-muted">{userRole === 'admin' ? 'Operations overview' : 'Community safety network'}</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <div className="hidden items-center gap-2 rounded-full border border-green-500/20 bg-green-500/10 px-2.5 py-1 text-xs text-green-300 md:flex">
+                <span className="h-1.5 w-1.5 rounded-full bg-green-400" />Operational
+              </div>
+              <button
+                type="button"
+                className="relative btn-ghost min-h-11 min-w-11 p-2"
+                onClick={() => setNotificationsOpen((open) => !open)}
                 aria-label="Notifications"
+                aria-expanded={notificationsOpen}
+                aria-controls="notifications-panel"
               >
                 <Bell size={18} />
-                <span className="absolute top-1 right-1 w-2 h-2 bg-accent rounded-full" />
+                <span className="absolute right-2.5 top-2.5 h-2 w-2 rounded-full border-2 border-surface bg-accent" />
               </button>
-
-              <div className="hidden lg:flex items-center gap-2 ml-2 pl-2 border-l border-surface-border">
-                <div className="w-8 h-8 bg-surface-overlay rounded-lg flex items-center justify-center text-xs font-semibold text-accent">
-                  {user?.name?.charAt(0) || 'U'}
-                </div>
-                <span className="text-sm font-medium max-w-[120px] truncate">{user?.name}</span>
+              <div className="hidden items-center gap-2 border-l border-surface-border pl-3 lg:flex">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-surface-overlay text-xs font-semibold text-red-200">{user?.name?.charAt(0) || 'U'}</div>
+                <span className="max-w-[10rem] truncate text-sm font-medium">{user?.name || 'Your account'}</span>
               </div>
             </div>
           </div>
         </header>
 
-        {notificationsOpen && (
-          <>
-            <div className="fixed inset-0 z-40" onClick={() => setNotificationsOpen(false)} aria-hidden />
-            <div className="fixed top-14 right-4 lg:right-6 z-50 w-[min(20rem,calc(100vw-2rem))] card shadow-elevated overflow-hidden animate-fade-in">
-              <div className="p-3 border-b border-surface-border flex items-center justify-between">
-                <h3 className="font-semibold text-sm">Notifications</h3>
-                <button type="button" onClick={() => setNotificationsOpen(false)} className="btn-ghost p-1">
-                  <X size={16} />
-                </button>
+        <AnimatePresence>
+          {notificationsOpen && (
+            <>
+              <motion.button
+                key="notif-overlay"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.1 }}
+                type="button" className="fixed inset-0 z-40 cursor-default" onClick={() => setNotificationsOpen(false)} aria-label="Close notifications"
+              />
+              <motion.section
+                key="notif-panel"
+                initial={{ opacity: 0, y: -8, scale: 0.96 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -8, scale: 0.96 }}
+                transition={{ duration: 0.15 }}
+                id="notifications-panel"
+                className="fixed right-4 top-[4.5rem] z-50 w-[min(22rem,calc(100vw-2rem))] overflow-hidden rounded-xl border border-surface-border bg-surface-raised shadow-elevated sm:right-6"
+                aria-label="Notifications"
+              >
+              <div className="flex items-center justify-between border-b border-surface-border px-4 py-3">
+                <div><h2 className="text-sm font-semibold">Notifications</h2><p className="text-xs text-text-muted">Latest activity</p></div>
+                <button type="button" onClick={() => setNotificationsOpen(false)} className="btn-ghost min-h-9 min-w-9 p-1.5" aria-label="Close notifications"><X size={16} /></button>
               </div>
-              <div className="max-h-64 overflow-y-auto divide-y divide-surface-border">
-                {[
-                  { title: 'Flood alert — Rajwada', desc: 'Critical flooding reported', time: '2m', type: 'critical' as const },
-                  { title: 'Report verified', desc: 'Your pothole report confirmed', time: '15m', type: 'success' as const },
-                  { title: 'Route updated', desc: 'New safe route available', time: '1h', type: 'info' as const },
-                ].map((notif) => (
-                  <div key={notif.title} className="p-3 hover:bg-surface-overlay/50">
-                    <p className="text-sm font-medium">{notif.title}</p>
-                    <p className="text-xs text-text-secondary mt-0.5">{notif.desc}</p>
-                    <p className="text-[10px] text-text-muted mt-1">{notif.time} ago</p>
+              <div className="divide-y divide-surface-border">
+                {notifications.map((notification) => (
+                  <div key={notification.title} className="flex gap-3 px-4 py-3 transition-colors hover:bg-surface-overlay/60">
+                    <span className={cn('mt-1.5 h-2 w-2 shrink-0 rounded-full', notification.tone)} />
+                    <div className="min-w-0 flex-1"><p className="truncate text-sm font-medium">{notification.title}</p><p className="mt-0.5 text-xs text-text-secondary">{notification.desc}</p></div>
+                    <span className="shrink-0 text-[11px] text-text-muted">{notification.time}</span>
                   </div>
                 ))}
               </div>
-            </div>
-          </>
-        )}
+            </motion.section>
+            </>
+          )}
+        </AnimatePresence>
 
-        <div className="flex-1 p-4 lg:p-6 overflow-auto">{children}</div>
+        <div className="flex-1 overflow-auto">
+          <div className="min-h-full p-4 sm:p-6 lg:p-8">
+            {isLoading ? loadingContent : children}
+          </div>
+        </div>
       </main>
     </div>
   )
