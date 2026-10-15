@@ -1,0 +1,354 @@
+# Code Review Report
+**Generated:** 2026-08-29T20:14:15.324437
+**Files Reviewed:** 21
+**Total Issues:** 32
+
+## Summary by Severity
+- 🟠 **High:** 31
+- 🟡 **Medium:** 1
+
+## Summary by Category
+- **Security:** 32
+
+## Issues by File
+
+### app\admin\disasters\page.tsx
+
+#### 🟠 Weak Cryptography [HIGH]
+**Rule:** `weak-crypto` | **Category:** security | **Confidence:** 80%
+**Location:** app\admin\disasters\page.tsx:63:79
+**Description:** Use of weak cryptographic algorithms
+
+**Code:**
+```
+<p className="text-sm text-text-secondary mt-0.5">{alert.description}</p>
+```
+
+#### 🟠 Weak Cryptography [HIGH]
+**Rule:** `weak-crypto` | **Category:** security | **Confidence:** 80%
+**Location:** app\admin\disasters\page.tsx:110:71
+**Description:** Use of weak cryptographic algorithms
+
+**Code:**
+```
+<p className="text-sm text-text-secondary">{report.description}</p>
+```
+
+### app\admin\page.tsx
+
+#### 🟠 Weak Cryptography [HIGH]
+**Rule:** `weak-crypto` | **Category:** security | **Confidence:** 80%
+**Location:** app\admin\page.tsx:38:63
+**Description:** Use of weak cryptographic algorithms
+
+**Code:**
+```
+if (search && !getIncidentLabel(c.type).toLowerCase().includes(search.toLowerCase()) && !c.description.toLowerCase().includes(search.toLowerCase()) && !c.location.address?.toLowerCase().includes(search.toLowerCase())) return false
+```
+
+#### 🟠 Weak Cryptography [HIGH]
+**Rule:** `weak-crypto` | **Category:** security | **Confidence:** 80%
+**Location:** app\admin\page.tsx:38:95
+**Description:** Use of weak cryptographic algorithms
+
+**Code:**
+```
+if (search && !getIncidentLabel(c.type).toLowerCase().includes(search.toLowerCase()) && !c.description.toLowerCase().includes(search.toLowerCase()) && !c.location.address?.toLowerCase().includes(search.toLowerCase())) return false
+```
+
+#### 🟠 Weak Cryptography [HIGH]
+**Rule:** `weak-crypto` | **Category:** security | **Confidence:** 80%
+**Location:** app\admin\page.tsx:38:126
+**Description:** Use of weak cryptographic algorithms
+
+**Code:**
+```
+if (search && !getIncidentLabel(c.type).toLowerCase().includes(search.toLowerCase()) && !c.description.toLowerCase().includes(search.toLowerCase()) && !c.location.address?.toLowerCase().includes(search.toLowerCase())) return false
+```
+
+#### 🟠 Weak Cryptography [HIGH]
+**Rule:** `weak-crypto` | **Category:** security | **Confidence:** 80%
+**Location:** app\admin\page.tsx:38:195
+**Description:** Use of weak cryptographic algorithms
+
+**Code:**
+```
+if (search && !getIncidentLabel(c.type).toLowerCase().includes(search.toLowerCase()) && !c.description.toLowerCase().includes(search.toLowerCase()) && !c.location.address?.toLowerCase().includes(search.toLowerCase())) return false
+```
+
+#### 🟠 Weak Cryptography [HIGH]
+**Rule:** `weak-crypto` | **Category:** security | **Confidence:** 80%
+**Location:** app\admin\page.tsx:45:101
+**Description:** Use of weak cryptographic algorithms
+
+**Code:**
+```
+inProgress: complaints.filter((c) => ['under_verification', 'assigned', 'work_in_progress'].includes(c.status)).length,
+```
+
+### app\admin\teams\page.tsx
+
+#### 🟠 Weak Cryptography [HIGH]
+**Rule:** `weak-crypto` | **Category:** security | **Confidence:** 80%
+**Location:** app\admin\teams\page.tsx:103:80
+**Description:** Use of weak cryptographic algorithms
+
+**Code:**
+```
+<p className="text-sm text-text-secondary truncate">{report.description}</p>
+```
+
+### app\auth\signup\page.tsx
+
+#### 🟠 Dangerous JavaScript Call: setTimeout [HIGH]
+**Rule:** `dangerous-settimeout` | **Category:** security | **Confidence:** 90%
+**Location:** app\auth\signup\page.tsx:48:6
+**Description:** Use of 'setTimeout' can execute arbitrary code
+
+**Code:**
+```
+      setTimeout(() => {
+```
+
+**Suggestion:** Avoid using setTimeout; use safer alternatives
+
+### app\dashboard\page.tsx
+
+#### 🟠 Weak Cryptography [HIGH]
+**Rule:** `weak-crypto` | **Category:** security | **Confidence:** 80%
+**Location:** app\dashboard\page.tsx:158:12
+**Description:** Use of weak cryptographic algorithms
+
+**Code:**
+```
+{/* Desktop sidebar */}
+```
+
+#### 🟠 Weak Cryptography [HIGH]
+**Rule:** `weak-crypto` | **Category:** security | **Confidence:** 80%
+**Location:** app\dashboard\page.tsx:248:75
+**Description:** Use of weak cryptographic algorithms
+
+**Code:**
+```
+<p className="text-sm text-text-secondary">{selectedIncident.description}</p>
+```
+
+### app\dashboard\report\page.tsx
+
+#### 🟠 Weak Cryptography [HIGH]
+**Rule:** `weak-crypto` | **Category:** security | **Confidence:** 80%
+**Location:** app\dashboard\report\page.tsx:26:9
+**Description:** Use of weak cryptographic algorithms
+
+**Code:**
+```
+const [description, setDescription] = useState('')
+```
+
+#### 🟠 Weak Cryptography [HIGH]
+**Rule:** `weak-crypto` | **Category:** security | **Confidence:** 80%
+**Location:** app\dashboard\report\page.tsx:26:25
+**Description:** Use of weak cryptographic algorithms
+
+**Code:**
+```
+const [description, setDescription] = useState('')
+```
+
+#### 🟠 Weak Cryptography [HIGH]
+**Rule:** `weak-crypto` | **Category:** security | **Confidence:** 80%
+**Location:** app\dashboard\report\page.tsx:48:26
+**Description:** Use of weak cryptographic algorithms
+
+**Code:**
+```
+if (!selectedType || !description) return
+```
+
+#### 🟠 Weak Cryptography [HIGH]
+**Rule:** `weak-crypto` | **Category:** security | **Confidence:** 80%
+**Location:** app\dashboard\report\page.tsx:51:6
+**Description:** Use of weak cryptographic algorithms
+
+**Code:**
+```
+description,
+```
+
+#### 🟠 Dangerous JavaScript Call: setTimeout [HIGH]
+**Rule:** `dangerous-settimeout` | **Category:** security | **Confidence:** 90%
+**Location:** app\dashboard\report\page.tsx:57:4
+**Description:** Use of 'setTimeout' can execute arbitrary code
+
+**Code:**
+```
+    setTimeout(() => {
+```
+
+**Suggestion:** Avoid using setTimeout; use safer alternatives
+
+#### 🟠 Weak Cryptography [HIGH]
+**Rule:** `weak-crypto` | **Category:** security | **Confidence:** 80%
+**Location:** app\dashboard\report\page.tsx:60:9
+**Description:** Use of weak cryptographic algorithms
+
+**Code:**
+```
+setDescription('')
+```
+
+#### 🟠 Weak Cryptography [HIGH]
+**Rule:** `weak-crypto` | **Category:** security | **Confidence:** 80%
+**Location:** app\dashboard\report\page.tsx:168:80
+**Description:** Use of weak cryptographic algorithms
+
+**Code:**
+```
+<label className="text-sm text-text-secondary mb-1.5 block">Description</label>
+```
+
+#### 🟠 Weak Cryptography [HIGH]
+**Rule:** `weak-crypto` | **Category:** security | **Confidence:** 80%
+**Location:** app\dashboard\report\page.tsx:170:29
+**Description:** Use of weak cryptographic algorithms
+
+**Code:**
+```
+value={description}
+```
+
+#### 🟠 Weak Cryptography [HIGH]
+**Rule:** `weak-crypto` | **Category:** security | **Confidence:** 80%
+**Location:** app\dashboard\report\page.tsx:171:42
+**Description:** Use of weak cryptographic algorithms
+
+**Code:**
+```
+onChange={(e) => setDescription(e.target.value)}
+```
+
+#### 🟠 Weak Cryptography [HIGH]
+**Rule:** `weak-crypto` | **Category:** security | **Confidence:** 80%
+**Location:** app\dashboard\report\page.tsx:172:35
+**Description:** Use of weak cryptographic algorithms
+
+**Code:**
+```
+placeholder="Describe the issue…"
+```
+
+#### 🟠 Weak Cryptography [HIGH]
+**Rule:** `weak-crypto` | **Category:** security | **Confidence:** 80%
+**Location:** app\dashboard\report\page.tsx:196:72
+**Description:** Use of weak cryptographic algorithms
+
+**Code:**
+```
+<Button onClick={() => setStep('confirm')} disabled={!description} className="w-full">
+```
+
+#### 🟠 Weak Cryptography [HIGH]
+**Rule:** `weak-crypto` | **Category:** security | **Confidence:** 80%
+**Location:** app\dashboard\report\page.tsx:209:64
+**Description:** Use of weak cryptographic algorithms
+
+**Code:**
+```
+<p className="text-sm text-text-secondary">{description}</p>
+```
+
+### app\dashboard\sos\page.tsx
+
+#### 🟠 Dangerous JavaScript Call: setTimeout [HIGH]
+**Rule:** `dangerous-settimeout` | **Category:** security | **Confidence:** 90%
+**Location:** app\dashboard\sos\page.tsx:39:4
+**Description:** Use of 'setTimeout' can execute arbitrary code
+
+**Code:**
+```
+    setTimeout(() => {
+```
+
+**Suggestion:** Avoid using setTimeout; use safer alternatives
+
+#### 🟠 Weak Cryptography [HIGH]
+**Rule:** `weak-crypto` | **Category:** security | **Confidence:** 80%
+**Location:** app\dashboard\sos\page.tsx:137:98
+**Description:** Use of weak cryptographic algorithms
+
+**Code:**
+```
+<textarea value={message} onChange={(e) => setMessage(e.target.value)} placeholder="Describe your emergency…" className="input-field resize-none h-20" />
+```
+
+### app\layout.tsx
+
+#### 🟠 Weak Cryptography [HIGH]
+**Rule:** `weak-crypto` | **Category:** security | **Confidence:** 80%
+**Location:** app\layout.tsx:14:2
+**Description:** Use of weak cryptographic algorithms
+
+**Code:**
+```
+description: "India's AI-Powered Public Infrastructure & Emergency Intelligence Platform. Real-time road intelligence, civic reporting, and disaster response.",
+```
+
+#### 🟡 Possible XSS [MEDIUM]
+**Rule:** `ai-security` | **Category:** security | **Confidence:** 40%
+**Location:** app\layout.tsx:15:0
+**Description:** Found pattern matching: /.*\.js
+
+**Suggestion:** Review and fix: Possible XSS
+
+### app\page.tsx
+
+#### 🟠 Weak Cryptography [HIGH]
+**Rule:** `weak-crypto` | **Category:** security | **Confidence:** 80%
+**Location:** app\page.tsx:24:4
+**Description:** Use of weak cryptographic algorithms
+
+**Code:**
+```
+desc: 'Clear, local updates about flooding, road damage, traffic, and other disruptions.',
+```
+
+#### 🟠 Weak Cryptography [HIGH]
+**Rule:** `weak-crypto` | **Category:** security | **Confidence:** 80%
+**Location:** app\page.tsx:29:4
+**Description:** Use of weak cryptographic algorithms
+
+**Code:**
+```
+desc: 'Share the details responders need: location, photo, context, and urgency.',
+```
+
+#### 🟠 Weak Cryptography [HIGH]
+**Rule:** `weak-crypto` | **Category:** security | **Confidence:** 80%
+**Location:** app\page.tsx:34:4
+**Description:** Use of weak cryptographic algorithms
+
+**Code:**
+```
+desc: 'Choose routes with current hazards and safety information in view.',
+```
+
+#### 🟠 Weak Cryptography [HIGH]
+**Rule:** `weak-crypto` | **Category:** security | **Confidence:** 80%
+**Location:** app\page.tsx:39:4
+**Description:** Use of weak cryptographic algorithms
+
+**Code:**
+```
+desc: 'Reach emergency support, nearby resources, and rescue coordination quickly.',
+```
+
+#### 🟠 Weak Cryptography [HIGH]
+**Rule:** `weak-crypto` | **Category:** security | **Confidence:** 80%
+**Location:** app\page.tsx:172:86
+**Description:** Use of weak cryptographic algorithms
+
+**Code:**
+```
+<p className="text-sm leading-relaxed text-text-secondary">{feature.desc}</p>
+```
